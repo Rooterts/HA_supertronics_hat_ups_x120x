@@ -1,5 +1,8 @@
 {
   "config": {
+    "abort": {
+      "already_configured": "This UPS is already configured."
+    },
     "step": {
       "user": {
         "title": "Suptronics UPS X120x",
@@ -13,7 +16,8 @@
           "i2c_bus": "I2C bus",
           "i2c_address": "I2C address",
           "power_loss_pin": "AC power detection GPIO pin",
-          "charge_control_pin": "Charging control GPIO pin"
+          "charge_control_pin": "Charging control GPIO pin",
+          "invert_ac_power": "Invert AC power detection"
         }
       }
     },
@@ -34,7 +38,8 @@
           "i2c_bus": "I2C bus",
           "i2c_address": "I2C address",
           "power_loss_pin": "AC power detection GPIO pin",
-          "charge_control_pin": "Charging control GPIO pin"
+          "charge_control_pin": "Charging control GPIO pin",
+          "invert_ac_power": "Invert AC power detection"
         }
       }
     },

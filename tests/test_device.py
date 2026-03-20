@@ -82,6 +82,7 @@ class DummyDevice(SuptronicsUPSDevice):
             gpio_chip="/dev/gpiochip0",
             power_loss_pin=6,
             charge_control_pin=16,
+            invert_ac_power=False,
         )
         self.commands: list[bool] = []
 

@@ -18,19 +18,11 @@ from .const import (
     CONF_GPIO_CHIP,
     CONF_I2C_ADDRESS,
     CONF_I2C_BUS,
+    CONF_INVERT_AC_POWER,
     CONF_POWER_LOSS_PIN,
     CONF_RESUME_CHARGE_PERCENT,
     CONF_SCAN_INTERVAL,
     CONF_STOP_CHARGE_PERCENT,
-    DEFAULT_AUTO_CHARGE,
-    DEFAULT_CHARGE_CONTROL_PIN,
-    DEFAULT_GPIO_CHIP,
-    DEFAULT_I2C_ADDRESS,
-    DEFAULT_I2C_BUS,
-    DEFAULT_POWER_LOSS_PIN,
-    DEFAULT_RESUME_CHARGE_PERCENT,
-    DEFAULT_SCAN_INTERVAL,
-    DEFAULT_STOP_CHARGE_PERCENT,
     DATA_AUTO_CHARGE,
     DATA_AC_POWER,
     DATA_BATTERY_PERCENT_RAW,
@@ -41,6 +33,7 @@ from .const import (
     DOMAIN,
 )
 from .device import SuptronicsUPSDevice
+from .options import merge_options
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -52,22 +45,20 @@ class SuptronicsUPSCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         self.config_entry = config_entry
+        options = merge_options(config_entry.options)
         self.device = SuptronicsUPSDevice(
-            i2c_bus=config_entry.options.get(CONF_I2C_BUS, DEFAULT_I2C_BUS),
-            i2c_address=config_entry.options.get(CONF_I2C_ADDRESS, DEFAULT_I2C_ADDRESS),
-            gpio_chip=config_entry.options.get(CONF_GPIO_CHIP, DEFAULT_GPIO_CHIP),
-            power_loss_pin=config_entry.options.get(CONF_POWER_LOSS_PIN, DEFAULT_POWER_LOSS_PIN),
-            charge_control_pin=config_entry.options.get(
-                CONF_CHARGE_CONTROL_PIN, DEFAULT_CHARGE_CONTROL_PIN
-            ),
+            i2c_bus=int(options[CONF_I2C_BUS]),
+            i2c_address=int(options[CONF_I2C_ADDRESS]),
+            gpio_chip=str(options[CONF_GPIO_CHIP]),
+            power_loss_pin=int(options[CONF_POWER_LOSS_PIN]),
+            charge_control_pin=int(options[CONF_CHARGE_CONTROL_PIN]),
+            invert_ac_power=bool(options[CONF_INVERT_AC_POWER]),
         )
         super().__init__(
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(
-                seconds=config_entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-            ),
+            update_interval=timedelta(seconds=int(options[CONF_SCAN_INTERVAL])),
         )
 
     async def async_config_entry_first_refresh(self) -> None:
@@ -84,13 +75,10 @@ class SuptronicsUPSCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         try:
             data = await self.hass.async_add_executor_job(self.device.read_status)
             last_action = AUTO_ACTION_NONE
-            auto_charge = self.config_entry.options.get(CONF_AUTO_CHARGE, DEFAULT_AUTO_CHARGE)
-            stop_threshold = self.config_entry.options.get(
-                CONF_STOP_CHARGE_PERCENT, DEFAULT_STOP_CHARGE_PERCENT
-            )
-            resume_threshold = self.config_entry.options.get(
-                CONF_RESUME_CHARGE_PERCENT, DEFAULT_RESUME_CHARGE_PERCENT
-            )
+            options = merge_options(self.config_entry.options)
+            auto_charge = bool(options[CONF_AUTO_CHARGE])
+            stop_threshold = int(options[CONF_STOP_CHARGE_PERCENT])
+            resume_threshold = int(options[CONF_RESUME_CHARGE_PERCENT])
 
             if auto_charge:
                 last_action = await self.hass.async_add_executor_job(
@@ -115,9 +103,8 @@ class SuptronicsUPSCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def async_refresh_options(self) -> None:
         """Reapply polling interval after options changes."""
-        self.update_interval = timedelta(
-            seconds=self.config_entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-        )
+        options = merge_options(self.config_entry.options)
+        self.update_interval = timedelta(seconds=int(options[CONF_SCAN_INTERVAL]))
         await self.async_request_refresh()
 
     async def async_shutdown(self) -> None:

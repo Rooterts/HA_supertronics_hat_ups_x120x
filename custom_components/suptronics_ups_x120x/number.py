@@ -14,12 +14,15 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .const import (
     CONF_RESUME_CHARGE_PERCENT,
     CONF_STOP_CHARGE_PERCENT,
+    DEFAULT_RESUME_CHARGE_PERCENT,
+    DEFAULT_STOP_CHARGE_PERCENT,
     DATA_RESUME_THRESHOLD,
     DATA_STOP_THRESHOLD,
     DOMAIN,
 )
 from .coordinator import SuptronicsUPSCoordinator
 from .entity import SuptronicsUPSEntity
+from .options import merge_options
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -86,16 +89,18 @@ class SuptronicsUPSNumber(SuptronicsUPSEntity, NumberEntity):
     async def async_set_native_value(self, value: float) -> None:
         """Persist the new threshold."""
         new_value = int(value)
-        current_options = dict(self._entry.options)
+        current_options = merge_options(self._entry.options)
         stop_value = (
             new_value
             if self.entity_description.option_key == CONF_STOP_CHARGE_PERCENT
-            else int(current_options[CONF_STOP_CHARGE_PERCENT])
+            else int(current_options.get(CONF_STOP_CHARGE_PERCENT, DEFAULT_STOP_CHARGE_PERCENT))
         )
         resume_value = (
             new_value
             if self.entity_description.option_key == CONF_RESUME_CHARGE_PERCENT
-            else int(current_options[CONF_RESUME_CHARGE_PERCENT])
+            else int(
+                current_options.get(CONF_RESUME_CHARGE_PERCENT, DEFAULT_RESUME_CHARGE_PERCENT)
+            )
         )
 
         if resume_value >= stop_value:

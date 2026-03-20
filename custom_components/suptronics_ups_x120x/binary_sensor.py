@@ -11,7 +11,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DATA_AC_POWER, DOMAIN
+from .const import DATA_AC_POWER, DATA_AC_POWER_RAW, DOMAIN
 from .coordinator import SuptronicsUPSCoordinator
 from .entity import SuptronicsUPSEntity
 
@@ -45,3 +45,8 @@ class SuptronicsACPowerBinarySensor(SuptronicsUPSEntity, BinarySensorEntity):
     def is_on(self) -> bool:
         """Return True when AC power is present."""
         return bool(self.coordinator.data[DATA_AC_POWER])
+
+    @property
+    def extra_state_attributes(self) -> dict[str, int]:
+        """Expose the raw GPIO reading for troubleshooting."""
+        return {"raw_gpio_value": int(self.coordinator.data[DATA_AC_POWER_RAW])}

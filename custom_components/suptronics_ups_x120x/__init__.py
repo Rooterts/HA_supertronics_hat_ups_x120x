@@ -8,6 +8,7 @@ from homeassistant.core import HomeAssistant
 
 from .coordinator import SuptronicsUPSCoordinator
 from .const import DOMAIN
+from .options import merge_options
 
 PLATFORMS: list[Platform] = [
     Platform.BINARY_SENSOR,
@@ -19,6 +20,10 @@ PLATFORMS: list[Platform] = [
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Suptronics UPS from a config entry."""
+    merged_options = merge_options(entry.options)
+    if dict(entry.options) != merged_options:
+        hass.config_entries.async_update_entry(entry, options=merged_options)
+
     coordinator = SuptronicsUPSCoordinator(hass, entry)
     await coordinator.async_config_entry_first_refresh()
 
@@ -39,5 +44,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Handle config entry options updates."""
+    merged_options = merge_options(entry.options)
+    if dict(entry.options) != merged_options:
+        hass.config_entries.async_update_entry(entry, options=merged_options)
     coordinator: SuptronicsUPSCoordinator = hass.data[DOMAIN][entry.entry_id]
     await coordinator.async_refresh_options()

@@ -1,0 +1,49 @@
+"""Helpers for config entry options."""
+
+from __future__ import annotations
+
+from collections.abc import Mapping
+
+from .const import (
+    CONF_AUTO_CHARGE,
+    CONF_CHARGE_CONTROL_PIN,
+    CONF_GPIO_CHIP,
+    CONF_I2C_ADDRESS,
+    CONF_I2C_BUS,
+    CONF_INVERT_AC_POWER,
+    CONF_POWER_LOSS_PIN,
+    CONF_RESUME_CHARGE_PERCENT,
+    CONF_SCAN_INTERVAL,
+    CONF_STOP_CHARGE_PERCENT,
+    DEFAULT_AUTO_CHARGE,
+    DEFAULT_CHARGE_CONTROL_PIN,
+    DEFAULT_GPIO_CHIP,
+    DEFAULT_I2C_ADDRESS,
+    DEFAULT_I2C_BUS,
+    DEFAULT_INVERT_AC_POWER,
+    DEFAULT_POWER_LOSS_PIN,
+    DEFAULT_RESUME_CHARGE_PERCENT,
+    DEFAULT_SCAN_INTERVAL,
+    DEFAULT_STOP_CHARGE_PERCENT,
+)
+
+DEFAULT_OPTIONS: dict[str, int | str | bool] = {
+    CONF_AUTO_CHARGE: DEFAULT_AUTO_CHARGE,
+    CONF_STOP_CHARGE_PERCENT: DEFAULT_STOP_CHARGE_PERCENT,
+    CONF_RESUME_CHARGE_PERCENT: DEFAULT_RESUME_CHARGE_PERCENT,
+    CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL,
+    CONF_GPIO_CHIP: DEFAULT_GPIO_CHIP,
+    CONF_I2C_BUS: DEFAULT_I2C_BUS,
+    CONF_I2C_ADDRESS: DEFAULT_I2C_ADDRESS,
+    CONF_POWER_LOSS_PIN: DEFAULT_POWER_LOSS_PIN,
+    CONF_CHARGE_CONTROL_PIN: DEFAULT_CHARGE_CONTROL_PIN,
+    CONF_INVERT_AC_POWER: DEFAULT_INVERT_AC_POWER,
+}
+
+
+def merge_options(options: Mapping[str, object] | None) -> dict[str, int | str | bool]:
+    """Return options with defaults filled in for old config entries."""
+    merged = dict(DEFAULT_OPTIONS)
+    if options:
+        merged.update(options)
+    return merged

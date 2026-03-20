@@ -14,6 +14,7 @@ from .const import (
     AUTO_ACTION_RESUMED,
     AUTO_ACTION_STOPPED,
     DATA_AC_POWER,
+    DATA_AC_POWER_RAW,
     DATA_BATTERY_PERCENT,
     DATA_BATTERY_PERCENT_RAW,
     DATA_BATTERY_STATE,
@@ -58,12 +59,14 @@ class SuptronicsUPSDevice:
         gpio_chip: str,
         power_loss_pin: int,
         charge_control_pin: int,
+        invert_ac_power: bool,
     ) -> None:
         self._i2c_bus_id = i2c_bus
         self._i2c_address = i2c_address
         self._gpio_chip = gpio_chip
         self._power_loss_pin = power_loss_pin
         self._charge_control_pin = charge_control_pin
+        self._invert_ac_power = invert_ac_power
         self._bus: smbus2.SMBus | None = None
 
     def setup(self) -> None:
@@ -90,7 +93,9 @@ class SuptronicsUPSDevice:
             ac_power=self._read_power_state(),
             charging_enabled=self.get_charging_enabled(),
         )
-        return status.as_dict()
+        data = status.as_dict()
+        data[DATA_AC_POWER_RAW] = int(self._read_gpio_value(self._power_loss_pin))
+        return data
 
     def apply_auto_charge_policy(
         self,
@@ -170,7 +175,8 @@ class SuptronicsUPSDevice:
 
         The manufacturer PLD script treats GPIO 6 high as AC power OK.
         """
-        return self._read_gpio_value(self._power_loss_pin) == Value.ACTIVE
+        gpio_high = self._read_gpio_value(self._power_loss_pin) == Value.ACTIVE
+        return not gpio_high if self._invert_ac_power else gpio_high
 
     def _read_gpio_value(self, pin: int) -> Value:
         request = gpiod.request_lines(

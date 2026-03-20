@@ -47,6 +47,7 @@ Values derived from the manufacturer project and docs:
 - Automatic charging switch
 - Configurable stop-charge threshold
 - Configurable resume-charge threshold
+- Configurable AC detection inversion for hardware variants
 - UI config flow and options flow
 
 ## HACS installation

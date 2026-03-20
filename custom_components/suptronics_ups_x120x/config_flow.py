@@ -13,6 +13,7 @@ from .const import (
     CONF_GPIO_CHIP,
     CONF_I2C_ADDRESS,
     CONF_I2C_BUS,
+    CONF_INVERT_AC_POWER,
     CONF_POWER_LOSS_PIN,
     CONF_RESUME_CHARGE_PERCENT,
     CONF_SCAN_INTERVAL,
@@ -22,6 +23,7 @@ from .const import (
     DEFAULT_GPIO_CHIP,
     DEFAULT_I2C_ADDRESS,
     DEFAULT_I2C_BUS,
+    DEFAULT_INVERT_AC_POWER,
     DEFAULT_POWER_LOSS_PIN,
     DEFAULT_RESUME_CHARGE_PERCENT,
     DEFAULT_SCAN_INTERVAL,
@@ -134,5 +136,9 @@ def _options_schema(options: dict | None = None) -> vol.Schema:
                 CONF_CHARGE_CONTROL_PIN,
                 default=options.get(CONF_CHARGE_CONTROL_PIN, DEFAULT_CHARGE_CONTROL_PIN),
             ): vol.All(vol.Coerce(int), vol.Range(min=0, max=64)),
+            vol.Required(
+                CONF_INVERT_AC_POWER,
+                default=options.get(CONF_INVERT_AC_POWER, DEFAULT_INVERT_AC_POWER),
+            ): bool,
         }
     )
