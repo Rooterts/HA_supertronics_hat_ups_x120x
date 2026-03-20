@@ -1,12 +1,14 @@
 {
   "domain": "suptronics_ups_x120x",
   "name": "Suptronics UPS X120x",
-  "codeowners": [],
+  "codeowners": [
+    "@Rooterts"
+  ],
   "config_flow": true,
-  "documentation": "https://github.com/soukal24/ha_suptronics_ups_x120x",
+  "documentation": "https://github.com/Rooterts/HA_supertronics_hat_ups_x120x",
   "integration_type": "device",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/soukal24/ha_suptronics_ups_x120x/issues",
+  "issue_tracker": "https://github.com/Rooterts/HA_supertronics_hat_ups_x120x/issues",
   "requirements": [
     "smbus2>=0.4.3",
     "gpiod>=2.2.2"

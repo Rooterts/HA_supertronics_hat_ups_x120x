@@ -54,7 +54,7 @@ Values derived from the manufacturer project and docs:
 1. Open HACS.
 2. Go to `Integrations`.
 3. Open the menu and choose `Custom repositories`.
-4. Add this repository URL and select `Integration`.
+4. Add `https://github.com/Rooterts/HA_supertronics_hat_ups_x120x` and select `Integration`.
 5. Install `HA Supertronics HAT UPS X120x`.
 6. Restart Home Assistant.
 7. Go to `Settings -> Devices & Services -> Add Integration`.
@@ -62,7 +62,7 @@ Values derived from the manufacturer project and docs:
 
 ## Manual installation
 
-1. Copy [custom_components/suptronics_ups_x120x](/home/rooterts/Projects/ZGo/custom_components/suptronics_ups_x120x) into your Home Assistant `custom_components` directory.
+1. Copy the `custom_components/suptronics_ups_x120x` folder into your Home Assistant `custom_components` directory.
 2. Restart Home Assistant.
 3. Add the integration from the UI.
 
@@ -70,7 +70,7 @@ Values derived from the manufacturer project and docs:
 
 Because both integrations use the same domain, you should not keep both copies installed at the same time.
 
-If you already have the older `soukal24/ha_suptronics_ups_x120x` version installed:
+If you already have the older `soukal24/ha_suptronics_ups_x120x` version installed, remove that copy first:
 
 1. Remove or replace the existing `custom_components/suptronics_ups_x120x` folder.
 2. Restart Home Assistant.
