@@ -1,0 +1,10 @@
+{
+  "name": "HA Supertronics HAT UPS X120x",
+  "content_in_root": false,
+  "country": "CU",
+  "domains": [
+    "suptronics_ups_x120x"
+  ],
+  "homeassistant": "2024.8.0",
+  "render_readme": true
+}

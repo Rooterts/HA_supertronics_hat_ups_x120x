@@ -1,0 +1,79 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Suptronics UPS X120x",
+        "description": "Configure the Suptronics UPS HAT and its automatic charging policy.",
+        "data": {
+          "auto_charge": "Enable automatic charging control",
+          "stop_charge_percent": "Stop charging at",
+          "resume_charge_percent": "Resume charging at",
+          "scan_interval": "Polling interval (seconds)",
+          "gpio_chip": "GPIO chip path",
+          "i2c_bus": "I2C bus",
+          "i2c_address": "I2C address",
+          "power_loss_pin": "AC power detection GPIO pin",
+          "charge_control_pin": "Charging control GPIO pin"
+        }
+      }
+    },
+    "error": {
+      "resume_must_be_lower": "Resume charging percentage must be lower than the stop charging percentage."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Suptronics UPS X120x",
+        "data": {
+          "auto_charge": "Enable automatic charging control",
+          "stop_charge_percent": "Stop charging at",
+          "resume_charge_percent": "Resume charging at",
+          "scan_interval": "Polling interval (seconds)",
+          "gpio_chip": "GPIO chip path",
+          "i2c_bus": "I2C bus",
+          "i2c_address": "I2C address",
+          "power_loss_pin": "AC power detection GPIO pin",
+          "charge_control_pin": "Charging control GPIO pin"
+        }
+      }
+    },
+    "error": {
+      "resume_must_be_lower": "Resume charging percentage must be lower than the stop charging percentage."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery_percent": {
+        "name": "Battery percentage"
+      },
+      "battery_voltage": {
+        "name": "Battery voltage"
+      },
+      "battery_state": {
+        "name": "Battery state"
+      }
+    },
+    "binary_sensor": {
+      "ac_power": {
+        "name": "AC power"
+      }
+    },
+    "switch": {
+      "charging": {
+        "name": "Charging"
+      },
+      "automatic_charging": {
+        "name": "Automatic charging"
+      }
+    },
+    "number": {
+      "stop_charge_percent": {
+        "name": "Stop charging at"
+      },
+      "resume_charge_percent": {
+        "name": "Resume charging at"
+      }
+    }
+  }
+}

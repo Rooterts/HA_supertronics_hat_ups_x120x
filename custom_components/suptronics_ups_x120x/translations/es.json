@@ -1,0 +1,79 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Suptronics UPS X120x",
+        "description": "Configura el HAT UPS de Suptronics y su politica automatica de carga.",
+        "data": {
+          "auto_charge": "Activar control automatico de carga",
+          "stop_charge_percent": "Detener carga en",
+          "resume_charge_percent": "Reanudar carga en",
+          "scan_interval": "Intervalo de sondeo (segundos)",
+          "gpio_chip": "Ruta del chip GPIO",
+          "i2c_bus": "Bus I2C",
+          "i2c_address": "Direccion I2C",
+          "power_loss_pin": "Pin GPIO de deteccion de alimentacion AC",
+          "charge_control_pin": "Pin GPIO de control de carga"
+        }
+      }
+    },
+    "error": {
+      "resume_must_be_lower": "El porcentaje de reanudacion debe ser menor que el porcentaje de corte."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Suptronics UPS X120x",
+        "data": {
+          "auto_charge": "Activar control automatico de carga",
+          "stop_charge_percent": "Detener carga en",
+          "resume_charge_percent": "Reanudar carga en",
+          "scan_interval": "Intervalo de sondeo (segundos)",
+          "gpio_chip": "Ruta del chip GPIO",
+          "i2c_bus": "Bus I2C",
+          "i2c_address": "Direccion I2C",
+          "power_loss_pin": "Pin GPIO de deteccion de alimentacion AC",
+          "charge_control_pin": "Pin GPIO de control de carga"
+        }
+      }
+    },
+    "error": {
+      "resume_must_be_lower": "El porcentaje de reanudacion debe ser menor que el porcentaje de corte."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery_percent": {
+        "name": "Porcentaje de bateria"
+      },
+      "battery_voltage": {
+        "name": "Voltaje de bateria"
+      },
+      "battery_state": {
+        "name": "Estado de bateria"
+      }
+    },
+    "binary_sensor": {
+      "ac_power": {
+        "name": "Alimentacion AC"
+      }
+    },
+    "switch": {
+      "charging": {
+        "name": "Carga"
+      },
+      "automatic_charging": {
+        "name": "Carga automatica"
+      }
+    },
+    "number": {
+      "stop_charge_percent": {
+        "name": "Detener carga en"
+      },
+      "resume_charge_percent": {
+        "name": "Reanudar carga en"
+      }
+    }
+  }
+}
