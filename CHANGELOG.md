@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.2
+
+- Fixed `hacs.json` validation for the current HACS action
+- Updated GitHub repository metadata for HACS validation
+
 ## v0.1.1
 
 - Rebranded the project as `HA Supertronics HAT UPS X120x`
