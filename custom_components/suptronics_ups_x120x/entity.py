@@ -25,5 +25,5 @@ class SuptronicsUPSEntity(CoordinatorEntity[SuptronicsUPSCoordinator]):
             identifiers={(DOMAIN, self._entry.entry_id)},
             manufacturer="SupTronics",
             model="X1200/X1201/X1202",
-            name="Suptronics UPS X120x",
+            name="HA Supertronics HAT UPS X120x",
         )

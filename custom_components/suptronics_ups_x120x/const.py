@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 DOMAIN = "suptronics_ups_x120x"
-NAME = "Suptronics UPS X120x"
+NAME = "HA Supertronics HAT UPS X120x"
 
 CONF_AUTO_CHARGE = "auto_charge"
 CONF_STOP_CHARGE_PERCENT = "stop_charge_percent"

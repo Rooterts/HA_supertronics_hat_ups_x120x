@@ -1,6 +1,6 @@
 {
   "domain": "suptronics_ups_x120x",
-  "name": "Suptronics UPS X120x",
+  "name": "HA Supertronics HAT UPS X120x",
   "codeowners": [
     "@Rooterts"
   ],

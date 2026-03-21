@@ -5,7 +5,7 @@
     },
     "step": {
       "user": {
-        "title": "Suptronics UPS X120x",
+        "title": "HA Supertronics HAT UPS X120x",
         "description": "Configure the Suptronics UPS HAT and its automatic charging policy.",
         "data": {
           "auto_charge": "Enable automatic charging control",
@@ -28,7 +28,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Suptronics UPS X120x",
+        "title": "HA Supertronics HAT UPS X120x",
         "data": {
           "auto_charge": "Enable automatic charging control",
           "stop_charge_percent": "Stop charging at",
