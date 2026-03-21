@@ -85,16 +85,17 @@ class SuptronicsUPSDevice:
         self.setup()
         voltage = self._read_voltage()
         raw_percent = self._read_capacity()
+        ac_gpio_value = self._read_gpio_value(self._power_loss_pin)
         status = SuptronicsUPSStatus(
             battery_percent=max(0, min(100, round(raw_percent))),
             battery_percent_raw=raw_percent,
             battery_voltage=voltage,
             battery_state=self._battery_state(voltage),
-            ac_power=self._read_power_state(),
+            ac_power=self._is_ac_power_present(ac_gpio_value),
             charging_enabled=self.get_charging_enabled(),
         )
         data = status.as_dict()
-        data[DATA_AC_POWER_RAW] = int(self._read_gpio_value(self._power_loss_pin))
+        data[DATA_AC_POWER_RAW] = self._gpio_value_to_int(ac_gpio_value)
         return data
 
     def apply_auto_charge_policy(
@@ -170,12 +171,12 @@ class SuptronicsUPSDevice:
         value = self._bus.read_word_data(self._i2c_address, register)
         return ((value & 0xFF) << 8) | ((value >> 8) & 0xFF)
 
-    def _read_power_state(self) -> bool:
+    def _is_ac_power_present(self, gpio_value: Value) -> bool:
         """Return True when AC power is present.
 
         The manufacturer PLD script treats GPIO 6 high as AC power OK.
         """
-        gpio_high = self._read_gpio_value(self._power_loss_pin) == Value.ACTIVE
+        gpio_high = self._gpio_value_to_int(gpio_value) == 1
         return not gpio_high if self._invert_ac_power else gpio_high
 
     def _read_gpio_value(self, pin: int) -> Value:
@@ -189,6 +190,28 @@ class SuptronicsUPSDevice:
         finally:
             request.release()
         return Value(value)
+
+    @staticmethod
+    def _gpio_value_to_int(value: Value) -> int:
+        """Convert libgpiod values across versions to a stable 0/1 integer."""
+        raw_value = getattr(value, "value", value)
+
+        if raw_value in (0, 1):
+            return int(raw_value)
+
+        if isinstance(raw_value, str):
+            normalized = raw_value.strip().lower()
+            if normalized in {"active", "high", "1"}:
+                return 1
+            if normalized in {"inactive", "low", "0"}:
+                return 0
+
+        if str(value).endswith("ACTIVE"):
+            return 1
+        if str(value).endswith("INACTIVE"):
+            return 0
+
+        raise ValueError(f"Unsupported GPIO value returned by gpiod: {value!r}")
 
     @staticmethod
     def _battery_state(voltage: float) -> str:
