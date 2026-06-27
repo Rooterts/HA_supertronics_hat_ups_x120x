@@ -68,17 +68,31 @@ class SuptronicsUPSDevice:
         self._charge_control_pin = charge_control_pin
         self._invert_ac_power = invert_ac_power
         self._bus: smbus2.SMBus | None = None
+        self._gpio_line = None
 
     def setup(self) -> None:
         """Open the I2C bus."""
         if self._bus is None:
             self._bus = smbus2.SMBus(self._i2c_bus_id)
+        if self._gpio_line is None:
+            self._gpio_line = gpiod.request_lines(
+                self._gpio_chip,
+                consumer="ha_suptronics_ups_x120x_charge",
+                config={
+                    self._charge_control_pin: gpiod.LineSettings(
+                        direction=Direction.OUTPUT,
+                    )
+                },
+            )
 
     def close(self) -> None:
         """Close the I2C bus."""
         if self._bus is not None:
             self._bus.close()
             self._bus = None
+        if self._gpio_line is not None:
+            self._gpio_line.release()
+            self._gpio_line = None
 
     def read_status(self) -> dict[str, int | float | bool | str]:
         """Read the current UPS status."""
@@ -139,21 +153,11 @@ class SuptronicsUPSDevice:
         - Low on GPIO 16 enables charging
         """
         output_value = Value.INACTIVE if enabled else Value.ACTIVE
-        request = gpiod.request_lines(
-            self._gpio_chip,
-            consumer="ha_suptronics_ups_x120x_charge",
-            config={
-                self._charge_control_pin: gpiod.LineSettings(
-                    direction=Direction.OUTPUT,
-                    output_value=output_value,
-                )
-            },
-        )
-        request.release()
+        self._gpio_line.set_value(self._charge_control_pin, output_value)
 
     def get_charging_enabled(self) -> bool:
         """Infer the current charge state from the charge control pin."""
-        value = self._read_gpio_value(self._charge_control_pin)
+        value = self._gpio_line.get_value(self._charge_control_pin)
         return value == Value.INACTIVE
 
     def _read_voltage(self) -> float:
