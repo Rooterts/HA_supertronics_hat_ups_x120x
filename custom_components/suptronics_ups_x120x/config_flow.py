@@ -67,16 +67,15 @@ class SuptronicsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry):
-        """Return the options flow."""
-        return SuptronicsOptionsFlow(config_entry)
+    def async_get_options_flow(
+        config_entry: ConfigEntry,
+    ) -> SuptronicsOptionsFlow:
+        """Create the options flow."""
+        return SuptronicsOptionsFlow()
 
 
 class SuptronicsOptionsFlow(config_entries.OptionsFlow):
     """Handle options updates."""
-
-    def __init__(self, config_entry) -> None:
-        self.config_entry = config_entry
 
     async def async_step_init(self, user_input: dict | None = None):
         """Manage options."""
@@ -94,7 +93,6 @@ class SuptronicsOptionsFlow(config_entries.OptionsFlow):
             data_schema=_options_schema(self.config_entry.options),
             errors=errors,
         )
-
 
 def _options_schema(options: dict | None = None) -> vol.Schema:
     options = options or {}
